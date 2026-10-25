@@ -47,15 +47,7 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-## Run the optimiser
-
-With the virtual environment activated, run:
-
-```powershell
-python Main.py
-```
-
-On the first run, the program downloads map data and creates `KL_Attraction_Place.xlsx`. This can take a little longer than later runs. Later runs reuse the saved distance matrix, so they do not need to download it again.
+For complete setup and run instructions, see [RUN_GUIDE.md](RUN_GUIDE.md).
 
 ## Using the application
 
@@ -81,6 +73,7 @@ On the first run, the program downloads map data and creates `KL_Attraction_Plac
 | File | Purpose |
 | --- | --- |
 | `Main.py` | Main entry point. Run this file to start the application. |
+| `dashboard/` | Separate local dashboard: `app.py` runs Flask; `data.json` stores dashboard options; `templates/` contains HTML; and `static/` contains CSS. |
 | `Preprocess.py` | Downloads map data, creates/loads the Excel distance matrix, and prepares worksheets. |
 | `User_Interface.py` | Handles terminal prompts, input validation, route calculation, and result display. |
 | `requirements.txt` | Lists Python packages that must be installed. |

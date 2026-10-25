@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KL Tourism Route Optimiser</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">EXACT ROUTE OPTIMISATION</p>
+      <h1>Kuala Lumpur Tourism Route Optimiser</h1>
+      <p>Select 3–5 attractions to calculate the shortest possible visiting order.</p>
+    </header>
+
+    <form method="post" class="card">
+      <fieldset>
+        <legend>Destinations <small class="selection-hint">Select 3–5</small></legend>
+        <div class="places">
+          {% for place in places %}
+          <label><span>{{ place }}</span><input type="checkbox" name="places" value="{{ place }}" {% if place in selected_places %}checked{% endif %}></label>
+          {% endfor %}
+        </div>
+      </fieldset>
+
+      <label for="car">Car type</label>
+      <select id="car" name="car">
+        {% for car, consumption in cars.items() %}
+        <option value="{{ car }}" {% if car == selected_car %}selected{% endif %}>{{ car }} — {{ consumption }} km/L</option>
+        {% endfor %}
+        <option value="others" {% if selected_car == 'others' %}selected{% endif %}>Others</option>
+      </select>
+
+      <div id="custom-fuel-field" {% if selected_car != 'others' %}hidden{% endif %}>
+        <label for="custom_consumption">Custom fuel consumption for Others (km/L)</label>
+        <input id="custom_consumption" name="custom_consumption" type="number" min="0.1" step="0.1" placeholder="e.g. 18.5">
+      </div>
+      <button type="submit">Optimise route</button>
+    </form>
+
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    {% if result %}
+    <section class="card result">
+      <p class="eyebrow">OPTIMAL RESULT</p>
+      <h2>Recommended visiting order</h2>
+      <ol>{% for place in result.route %}<li>{{ place }}</li>{% endfor %}</ol>
+      <div class="metrics">
+        <article><span>Total distance</span><strong>{{ '%.2f'|format(result.distance) }} km</strong></article>
+        <article><span>Fuel cost</span><strong>RM{{ '%.2f'|format(result.fuel_cost) }}</strong></article>
+        <article><span>Carbon emission</span><strong>{{ '%.2f'|format(result.carbon_emission) }} kg</strong></article>
+      </div>
+    </section>
+    {% endif %}
+  </main>
+  <script>
+    const carSelect = document.getElementById("car");
+    const customFuelField = document.getElementById("custom-fuel-field");
+    const customFuelInput = document.getElementById("custom_consumption");
+    const destinationCheckboxes = document.querySelectorAll('input[name="places"]');
+
+    function updateCustomFuelField() {
+      const isOtherCar = carSelect.value === "others";
+      customFuelField.hidden = !isOtherCar;
+      customFuelInput.required = isOtherCar;
+    }
+
+    carSelect.addEventListener("change", updateCustomFuelField);
+    updateCustomFuelField();
+
+    function limitDestinationSelection() {
+      const selectedCount = [...destinationCheckboxes].filter((checkbox) => checkbox.checked).length;
+      destinationCheckboxes.forEach((checkbox) => {
+        checkbox.disabled = !checkbox.checked && selectedCount >= 5;
+      });
+    }
+
+    destinationCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener("change", limitDestinationSelection);
+    });
+    limitDestinationSelection();
+  </script>
+</body>
+</html>
