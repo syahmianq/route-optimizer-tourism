@@ -1,7 +1,6 @@
 """Console input and output for the tourism route optimiser."""
 
 from itertools import permutations
-from time import perf_counter
 
 from openpyxl.styles import Alignment, Font
 
@@ -67,14 +66,9 @@ def _write_selected_places(workbook, all_places_sheet, selected_sheet, selected_
     workbook.save(filename)
 
 
-def _find_route(selected_places, selected_sheet):
+def calculate_exact_route(selected_places, distance_matrix):
     """Exhaustively evaluate every visit order and return the exact best route."""
-    distance_matrix = [
-        [selected_sheet.cell(row=row, column=column).value for column in range(2, len(selected_places) + 2)]
-        for row in range(2, len(selected_places) + 2)
-    ]
 
-    solver_started = perf_counter()
     best_order = None
     shortest_distance = float("inf")
     for order in permutations(range(len(selected_places))):
@@ -85,10 +79,16 @@ def _find_route(selected_places, selected_sheet):
         if route_distance < shortest_distance:
             best_order = order
             shortest_distance = route_distance
-    solver_seconds = perf_counter() - solver_started
-
     route = [selected_places[index] for index in best_order]
-    return route, shortest_distance, solver_seconds
+    return route, shortest_distance
+
+
+def _find_route(selected_places, selected_sheet):
+    distance_matrix = [
+        [selected_sheet.cell(row=row, column=column).value for column in range(2, len(selected_places) + 2)]
+        for row in range(2, len(selected_places) + 2)
+    ]
+    return calculate_exact_route(selected_places, distance_matrix)
 
 
 def _choose_car(total_distance):
@@ -113,9 +113,8 @@ def _choose_car(total_distance):
         _show_error(f"Invalid selection: {car}.", 'Choose "others" if your car is not listed.')
 
 
-def _show_summary(route, total_distance, litres, solver_seconds):
-    solver_minutes = solver_seconds / 60
-    messages = ["You can follow this path to minimize total distance travel:", " --> ".join(route), f"Total Distance: {total_distance:.2f} km", f"Fuel cost: RM{litres * 1.99:.2f}", f"Total carbon emission: {litres * 2.3:.2f} kg", f"Model finish after {solver_minutes:.6f} minutes.", "I hope you have a safe journey. Thank you for using me!"]
+def _show_summary(route, total_distance, litres):
+    messages = ["You can follow this path to minimize total distance travel:", " --> ".join(route), f"Total Distance: {total_distance:.2f} km", f"Fuel cost: RM{litres * 1.99:.2f}", f"Total carbon emission: {litres * 2.3:.2f} kg", "I hope you have a safe journey. Thank you for using me!"]
     width = max(len(message) for message in messages)
     print("\n" + " " * 10 + "=" * (width + 10))
     print(" " * 10 + "||       " + "SUMMARY".center(width) + "       ||")
@@ -129,6 +128,6 @@ def run_application(workbook, all_places_sheet, selected_sheet, places, filename
     """Run all terminal prompts and display the optimised trip summary."""
     selected_places = _choose_destinations(places)
     _write_selected_places(workbook, all_places_sheet, selected_sheet, selected_places, places, filename)
-    route, total_distance, solver_seconds = _find_route(selected_places, selected_sheet)
+    route, total_distance = _find_route(selected_places, selected_sheet)
     litres = _choose_car(total_distance)
-    _show_summary(route, total_distance, litres, solver_seconds)
+    _show_summary(route, total_distance, litres)

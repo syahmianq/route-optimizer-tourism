@@ -1,0 +1,26 @@
+:root { font-family: Arial, sans-serif; color: #18332f; background: #f1f6f3; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { margin: 48px auto; max-width: 960px; padding: 0 20px; }
+h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 6px 0; }
+.eyebrow { color: #087457; font-size: .75rem; font-weight: 700; letter-spacing: .12em; }
+.card { background: #fff; border: 1px solid #d7e3dd; border-radius: 16px; box-shadow: 0 8px 30px #14362b12; margin: 22px 0; padding: 26px; }
+fieldset { border: 0; margin: 0 0 22px; padding: 0; }
+legend, label { font-weight: 700; }
+small { color: #567167; font-weight: 400; }
+.selection-hint { font-size: 22px; }
+.places { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 14px; }
+.places label { align-items: center; background: #eff7f2; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; padding: 11px; }
+.places input { margin-left: 12px; width: auto; }
+.places label:has(input:disabled) { cursor: not-allowed; opacity: .55; }
+form > label { display: block; margin: 15px 0 7px; }
+#custom-fuel-field > label { display: block; margin: 15px 0 7px; }
+select, input { border: 1px solid #aec3b9; border-radius: 8px; font: inherit; padding: 10px; width: 100%; }
+button { background: #087457; border: 0; border-radius: 8px; color: white; cursor: pointer; font-size: 1rem; font-weight: 700; margin-top: 22px; padding: 12px 20px; }
+button:hover { background: #055740; }
+.error { background: #fff0ef; border: 1px solid #e5aaa4; border-radius: 8px; color: #8d2923; padding: 14px; }
+.metrics { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.metrics article { background: #e7f4ed; border-radius: 10px; padding: 15px; }
+.metrics span, .metrics strong { display: block; }
+.metrics span { color: #49655b; font-size: .85rem; margin-bottom: 6px; }
+.metrics strong { font-size: 1.1rem; }

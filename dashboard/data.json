@@ -1,0 +1,15 @@
+{
+  "places": [
+    "National Art Gallery", "Saloma Bridge", "KLCC", "KL Tower",
+    "National Monument", "Merdeka Square", "Central Market", "Bukit Bintang",
+    "Perdana Botanical Garden", "National Mosque", "Chinatown", "Royal Museum",
+    "Little India", "Thean Hou Temple"
+  ],
+  "cars": {
+    "Axia": 27.4, "Bezza": 21.1, "Myvi": 22.2, "Ativa": 18.9,
+    "Alza": 22.0, "Aruz": 15.6, "Saga": 19.6, "Iriz": 13.5,
+    "Persona": 12.5, "S70": 16.1
+  },
+  "fuel_price_per_litre": 1.99,
+  "carbon_kg_per_litre": 2.3
+}
