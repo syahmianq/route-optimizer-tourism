@@ -1,0 +1,4 @@
+# Third-party packages required by the route optimiser.
+openpyxl>=3.1,<4
+networkx>=3.0,<4
+osmnx>=2.0,<3
