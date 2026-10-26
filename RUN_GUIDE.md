@@ -74,6 +74,7 @@ http://127.0.0.1:5000
 ```
 
 Open that address in a web browser. Select three to five destinations, choose a car type, and select **Optimise route** to view the result.
+The result includes a map with numbered destinations in the recommended order and the driving route between them. The map uses OpenStreetMap tiles and the OSRM routing service, so an internet connection is required to display the map and road path.
 
 To stop the dashboard server, return to PowerShell and press `Ctrl+C`.
 

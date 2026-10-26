@@ -17,13 +17,20 @@ PLACES = [
 ]
 
 PLACE_COORDS = {
-    "National Art Gallery": (3.1740359, 101.705126), "Saloma Bridge": (3.1609793, 101.7055954),
-    "KLCC": (3.1574878, 101.7108034), "KL Tower": (3.1529983, 101.7016486),
-    "National Monument": (3.1488546, 101.6838276), "Merdeka Square": (3.1490301, 101.6933323),
-    "Central Market": (3.1450178, 101.6950955), "Bukit Bintang": (3.1467941, 101.7087459),
-    "Perdana Botanical Garden": (3.1429252, 101.6825746), "National Mosque": (3.1419837, 101.6891824),
-    "Chinatown": (3.144528, 101.6980254), "Royal Museum": (3.1324662, 101.6932807),
-    "Little India": (3.1292845, 101.6815846), "Thean Hou Temple": (3.1219579, 101.6850929),
+    "National Art Gallery": (3.1740359, 101.705126), 
+    "Saloma Bridge": (3.1609793, 101.7055954),
+    "KLCC": (3.1574878, 101.7108034), 
+    "KL Tower": (3.1529983, 101.7016486),
+    "National Monument": (3.1504854,101.6840715), 
+    "Merdeka Square": (3.1489428, 101.6942382),
+    "Central Market": (3.1450178, 101.6950955), 
+    "Bukit Bintang": (3.1467941, 101.7087459),
+    "Perdana Botanical Garden": (3.1429252, 101.6825746), 
+    "National Mosque": (3.1419837, 101.6891824),
+    "Chinatown": (3.144528, 101.6980254), 
+    "Royal Museum": (3.1324662, 101.6932807),
+    "Little India": (3.1292845, 101.6815846), 
+    "Thean Hou Temple": (3.1219579, 101.6850929),
 }
 
 
