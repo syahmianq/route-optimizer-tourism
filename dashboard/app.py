@@ -9,7 +9,7 @@ from flask import Flask, render_template, request
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from Preprocess import PLACES, prepare_workbook
+from Preprocess import PLACE_COORDS, PLACES, prepare_workbook
 from User_Interface import calculate_exact_route
 
 
@@ -80,6 +80,14 @@ def dashboard():
         selected_places=selected_places,
         selected_car=selected_car,
         result=result,
+        map_stops=[
+            {
+                "name": place,
+                "latitude": PLACE_COORDS[place][0],
+                "longitude": PLACE_COORDS[place][1],
+            }
+            for place in result["route"]
+        ] if result else [],
         error=error,
     )
 

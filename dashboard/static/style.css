@@ -24,3 +24,12 @@ button:hover { background: #055740; }
 .metrics span, .metrics strong { display: block; }
 .metrics span { color: #49655b; font-size: .85rem; margin-bottom: 6px; }
 .metrics strong { font-size: 1.1rem; }
+.route-map-section { margin: 24px 0; }
+.route-map-section h3 { margin-bottom: 6px; }
+.map-status { color: #49655b; margin: 0 0 10px; }
+.map-status-error { color: #8d2923; }
+#route-map { background: #e7f4ed; border: 1px solid #d7e3dd; border-radius: 10px; height: 420px; overflow: hidden; }
+.route-marker { align-items: center; background: #087457; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 1px 5px #14362b66; color: #fff; display: flex; font-size: 14px; font-weight: 700; justify-content: center; }
+@media (max-width: 600px) {
+  #route-map { height: 320px; }
+}

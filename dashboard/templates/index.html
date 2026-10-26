@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>KL Tourism Route Optimiser</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -45,6 +46,11 @@
       <p class="eyebrow">OPTIMAL RESULT</p>
       <h2>Recommended visiting order</h2>
       <ol>{% for place in result.route %}<li>{{ place }}</li>{% endfor %}</ol>
+      <section class="route-map-section" aria-labelledby="route-map-heading">
+        <h3 id="route-map-heading">Your route on the map</h3>
+        <p id="map-status" class="map-status" role="status" aria-live="polite">Loading the driving route…</p>
+        <div id="route-map" role="region" aria-label="Map of the recommended driving route"></div>
+      </section>
       <div class="metrics">
         <article><span>Total distance</span><strong>{{ '%.2f'|format(result.distance) }} km</strong></article>
         <article><span>Fuel cost</span><strong>RM{{ '%.2f'|format(result.fuel_cost) }}</strong></article>
@@ -53,6 +59,70 @@
     </section>
     {% endif %}
   </main>
+  {% if result %}
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const routeStops = {{ map_stops|tojson }};
+    const mapStatus = document.getElementById("map-status");
+
+    function showMapError(message) {
+      mapStatus.textContent = message;
+      mapStatus.classList.add("map-status-error");
+    }
+
+    if (!window.L) {
+      showMapError("The map could not be loaded. Check your internet connection and try again.");
+    } else {
+      const map = L.map("route-map");
+      const stopCoordinates = routeStops.map((stop) => [stop.latitude, stop.longitude]);
+      map.setView(stopCoordinates[0], 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+      }).addTo(map);
+
+      routeStops.forEach((stop, index) => {
+        const marker = L.marker([stop.latitude, stop.longitude], {
+          icon: L.divIcon({
+            className: "route-marker",
+            html: `<span>${index + 1}</span>`,
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+          })
+        }).addTo(map);
+        const popup = document.createElement("span");
+        popup.textContent = `${index + 1}. ${stop.name}`;
+        marker.bindPopup(popup);
+      });
+
+      const routeCoordinates = routeStops
+        .map((stop) => `${stop.longitude},${stop.latitude}`)
+        .join(";");
+      const routeUrl = `https://router.project-osrm.org/route/v1/driving/${routeCoordinates}?overview=full&geometries=geojson&steps=false`;
+
+      fetch(routeUrl)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("The routing service could not be reached.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.code !== "Ok" || !data.routes || !data.routes.length) {
+            throw new Error("No driving route is available for these destinations.");
+          }
+          const roadPath = data.routes[0].geometry.coordinates.map(([longitude, latitude]) => [latitude, longitude]);
+          const routeLine = L.polyline(roadPath, { color: "#087457", weight: 5, opacity: 0.85 }).addTo(map);
+          map.fitBounds(routeLine.getBounds().extend(stopCoordinates), { padding: [24, 24] });
+          mapStatus.textContent = "Driving route between destinations. Follow the numbered stops in order.";
+        })
+        .catch(() => {
+          showMapError("The driving route is unavailable right now. The numbered destinations are still shown.");
+          map.fitBounds(stopCoordinates, { padding: [24, 24] });
+        });
+    }
+  </script>
+  {% endif %}
   <script>
     const carSelect = document.getElementById("car");
     const customFuelField = document.getElementById("custom-fuel-field");
